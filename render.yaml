@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: todo-api
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "fastapi run"
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        value: "your_database_url_here"
+      - key: SECRET_KEY
+        value: "secret_key"
+    
