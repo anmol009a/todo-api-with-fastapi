@@ -1,0 +1,83 @@
+# Todo API
+
+This is a simple Todo API built with FastAPI.
+
+## Index
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [API Docs](#api-docs)
+  - [Interactive API Documentation](#interactive-api-documentation)
+- [API Endpoints](#api-endpoints)
+  - [Todo API Endpoints](#todo-api-endpoints)
+  - [Auth API Endpoints](#auth-api-endpoints)
+
+## Features
+
+- Create a new todo item
+- Retrieve a list of todo items
+- Update a todo item by ID
+- Delete a todo item by ID
+
+## Requirements
+
+- Python 3.10+
+- FastAPI
+
+## Installation
+
+1. Clone the repository:
+  ```sh
+  git clone https://github.com/anmol009a/todo-api-with-fastapi.git
+  ```
+2. Navigate to the project directory:
+  ```sh
+  cd todo-api-with-fastapi
+  ```
+3. Install the dependencies:
+  ```sh
+  pip install -r requirements.txt
+  ```
+
+## Running the Application
+
+To run the application using FastAPI, use the following command:
+  ```sh
+  python -m fastapi run
+  ``` 
+To run the application in development using FastAPI, use the following command:
+  ```sh
+  python -m fastapi dev main.py
+  ``` 
+
+## API Docs
+### Interactive API Documentation
+
+You can access the interactive API documentation provided by Swagger UI by navigating to the following URL in your browser:
+
+```
+http://localhost:8000/docs
+```
+
+For an alternative API documentation using ReDoc, visit:
+
+```
+http://localhost:8000/redoc
+```
+
+## API Endpoints
+### Todo API Endpoints
+
+- **GET /todos**: Retrieve a list of todo items
+- **GET /todos/{id}**: Retrieve a single todo item by ID
+- **POST /todos**: Create a new todo item
+- **PUT /todos/{id}**: Update a todo item by ID
+- **DELETE /todos/{id}**: Delete a todo item by ID
+
+Each endpoint returns a JSON response and uses standard HTTP status codes to indicate success or failure.
+
+### Auth API Endpoints
+- **POST /users/**: Register a new user
+- **POST /token/**: Authenticate a user and return a token
