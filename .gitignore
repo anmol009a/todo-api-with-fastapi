@@ -1,3 +1,5 @@
 /.venv
 /test.db
 /__pycache__
+.env.local
+.env
