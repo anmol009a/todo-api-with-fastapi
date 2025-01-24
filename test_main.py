@@ -39,9 +39,23 @@ def login_with_api():
     return client.post("/token/", data={"username": "testuser", "password": "testpass"})
 
 
+def delete_todo():
+    access_token = login_with_api().json()["access_token"]
+    return client.delete(
+        "/todos/1",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+
+
 def test_create_user_with_api():
     response = create_user()
     assert response.status_code == 201
+
+
+def test_user_already_exits():
+    create_user()
+    response = create_user()
+    assert response.status_code == 400
 
 
 def test_login_with_api():
@@ -83,10 +97,11 @@ def test_update_todo():
 
 
 def test_delete_todo():
-    access_token = login_with_api().json()["access_token"]
-
-    response = client.delete(
-        "/todos/1",
-        headers={"Authorization": f"Bearer {access_token}"},
-    )
+    response = delete_todo()
     assert response.status_code == 204
+
+
+def test_delete_todo_not_found():
+    delete_todo()
+    response = delete_todo()
+    assert response.status_code == 404
