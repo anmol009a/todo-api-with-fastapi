@@ -6,7 +6,7 @@ Modules:
   sqlalchemy: SQL toolkit and Object-Relational Mapping (ORM) library for Python.
   pydantic: Data validation and settings management using Python type annotations.
   bcrypt: Library for hashing passwords.
-  jwt: Library for encoding and decoding JSON Web Tokens.
+  pyjwt: Library for encoding and decoding JSON Web Tokens.
   typing: Provides runtime support for type hints.
   dotenv: Reads key-value pairs from a .env file and can set them as environment variables.
 Functions:
@@ -200,7 +200,7 @@ def get_current_user(
 app = FastAPI()
 
 
-@app.post("/users/", response_model=Token)
+@app.post("/users/", response_model=Token, status_code=201)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user in the database.
@@ -210,16 +210,21 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     Returns:
       dict: A dictionary containing the access token and token type.
     """
-
-    hashed_password = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
-    db_user = User(
-        username=user.username, hashed_password=hashed_password.decode("utf-8")
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    token = jwt.encode({"sub": str(db_user.id)}, SECRET_KEY, algorithm=ALGORITHM)
-    return {"access_token": token, "token_type": "bearer"}
+    # check if user exists
+    checkUser = db.query(User).filter(User.username == user.username).first()
+    if checkUser is None:
+        # create user
+        hashed_password = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+        db_user = User(
+            username=user.username, hashed_password=hashed_password.decode("utf-8")
+        )
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        token = jwt.encode({"sub": str(db_user.id)}, SECRET_KEY, algorithm=ALGORITHM)
+        return {"access_token": token, "token_type": "bearer"}
+    else:
+        raise HTTPException(status_code=400, detail="Username already exists.")
 
 
 @app.post("/token", response_model=Token)
@@ -246,7 +251,7 @@ def login(
     return {"access_token": token, "token_type": "bearer"}
 
 
-@app.post("/todos/", response_model=TodoResponse)
+@app.post("/todos/", response_model=TodoResponse, status_code=201)
 def create_todo(
     todo: TodoCreate,
     db: Session = Depends(get_db),
@@ -269,7 +274,7 @@ def create_todo(
     return db_todo
 
 
-@app.get("/todos/", response_model=List[TodoResponse])
+@app.get("/todos/", response_model=List[TodoResponse], status_code=200)
 def get_todos(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     """
     Retrieve a list of todo items for the current user.
@@ -315,7 +320,7 @@ def update_todo(
     return db_todo
 
 
-@app.delete("/todos/{todo_id}")
+@app.delete("/todos/{todo_id}", status_code=204)
 def delete_todo(
     todo_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)
 ):
