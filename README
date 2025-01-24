@@ -7,6 +7,7 @@ This is a simple Todo API built with FastAPI.
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Testing](#testing)
 - [Running the Application](#running-the-application)
 - [API Docs](#api-docs)
   - [Interactive API Documentation](#interactive-api-documentation)
@@ -39,6 +40,18 @@ This is a simple Todo API built with FastAPI.
 3. Install the dependencies:
   ```sh
   pip install -r requirements.txt
+  ```
+
+## Testing
+
+To run the tests, use the following command:
+  ```sh
+  pytest
+  ```
+
+Make sure you have `pytest` installed. You can install it using:
+  ```sh
+  pip install pytest
   ```
 
 ## Running the Application
